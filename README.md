@@ -52,7 +52,7 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
     SELECT * FROM rides LIMIT 10;
     ```
 
-    Outpt:
+    Output:
 
 | ride_id          | rideable_type | started_at       | ended_at         | start_station_name            | start_station_id | end_station_name               | end_station_id | start_lat    | start_lng          | end_lat   | end_lng     | member_casual |
 | ---------------- | ------------- | ---------------- | ---------------- | ----------------------------- | ---------------- | ------------------------------ | -------------- | ------------ | ------------------ | --------- | ----------- | ------------- |
@@ -71,16 +71,24 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
     ```sql
     SELECT COUNT(*) FROM rides;
     ```
+- Check for any null or missing values in key columns:
+    ```sql
+    SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
+    ```
+- Check the distribution of rideable types:
+    ```sql
+    SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
+    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
+    ```
 
 ### 4. Data Cleaning
-- Identified and removed any records with inconsistencies, such as odd bike type, member type or rides with an end time earlier than the start time:
+- Identified and removed any records with inconsistencies such as odd bike type, member type or rides with an end time earlier than the start time:
     ```sql
-    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
-    SELECT COUNT(*) FROM rides WHERE ended_at < started_at;
+    DELETE FROM rides WHERE rowid NOT IN (SELECT MIN(rowid) FROM rides GROUP BY ride_id);
+    DELETE FROM rides WHERE start_station_name IS NULL OR end_station_name IS NULL;
+    DELETE FROM rides WHERE ended_at < started_at;
     ```
     
-    
-
 ### 5. Data Analysis
 - Conducted various analyses, such as:
     - User type distribution:
