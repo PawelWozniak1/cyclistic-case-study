@@ -72,12 +72,8 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
     SELECT COUNT(*) FROM rides;
     ```
 
-- Check for any null or missing values in key columns:
-    ```sql
-    SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
-    ```
-    
-- Check the distribution of rideable types:
+### 4. Data Cleaning
+- Identified and removed any records with inconsistencies, such as odd bike type, member type or rides with an end time earlier than the start time:
     ```sql
     SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
     SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
