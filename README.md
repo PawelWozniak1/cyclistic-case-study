@@ -21,6 +21,9 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
     ```sql
     SELECT COUNT(*) FROM rides;
     ```
+    
+    !`SELECT COUNT(*) FROM "/col"`
+    
 
 ### 4. Data Cleaning
 - Identified and removed any records with inconsistencies, such as rides with an end time earlier than the start time:
