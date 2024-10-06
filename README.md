@@ -11,19 +11,46 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
 
 ### 2. Importing Data
 - Used the following command to import the data from CSV files into the SQLite database:
-    ```sql
-    .mode csv
-    .import rides.csv rides
-    ```
+    ```python
+    import sqlite3
+    import pandas as pd
+    import csv
+    import os
+
+    # Path to the directory containing CSV files
+    csv_dir = 'R:/cyclistic-case-study/'
+
+    # Create a new SQLite database
+    conn = sqlite3.connect('R:/cyclistic-case-study/cyclistic_data.db')
+
+    # Function to import a CSV file
+    def import_csv(file_path):
+        with open(file_path, 'r') as f:
+            reader = csv.reader(f)
+            next(reader)  # Skip the header row
+            for row in reader:
+                cur.execute('''
+                    INSERT INTO rides (
+                        ride_id, rideable_type, started_at, ended_at,
+                        start_station_name, start_station_id, end_station_name,
+                        end_station_id, start_lat, start_lng, end_lat, end_lng,
+                        member_casual
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', row)
+                
+    # Loop through each CSV file in the directory
+    for file in os.listdir(csv_dir):
+        if file.endswith('.csv'):
+            df = pd.read_csv(os.path.join(csv_dir, file))
+            df.to_sql(name='rides', con=conn, if_exists='append', index=False)
+
+    conn.close()
 
 ### 3. Verifying Data Import
 - Checked the number of rows imported:
     ```sql
     SELECT COUNT(*) FROM rides;
     ```
-    
-    !`SELECT COUNT(*) FROM "/col"`
-    
 
 ### 4. Data Cleaning
 - Identified and removed any records with inconsistencies, such as rides with an end time earlier than the start time:
