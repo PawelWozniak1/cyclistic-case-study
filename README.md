@@ -37,7 +37,7 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
                         member_casual
                     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', row)
-                
+
     # Loop through each CSV file in the directory
     for file in os.listdir(csv_dir):
         if file.endswith('.csv'):
@@ -47,16 +47,37 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
     conn.close()
 
 ### 3. Verifying Data Import
+- Overview of the data
+    ```sql
+    SELECT * FROM rides LIMIT 10;
+    ```
+
+| ride_id          | rideable_type | started_at      | ended_at        | start_station_name            | start_station_id | end_station_name               | end_station_id | start_lat    | start_lng          | end_lat   | end_lng     | member_casual |
+| ---------------- | ------------- | --------------- | --------------- | ----------------------------- | ---------------- | ------------------------------ | -------------- | ------------ | ------------------ | --------- | ----------- | ------------- |
+| F96D5A74A3E41399 | electric_bike | ############### | ############### | Lincoln Ave & Fullerton Ave   | TA1309000058     | Hampden Ct & Diversey Ave      | 202480.0       | 41.924073935 | \-87.646278381     | 41.93     | \-87.64     | member        |
+| 13CB7EB698CEDB88 | classic_bike  | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
+| BD88A2E670661CE5 | electric_bike | ############### | ############### | Western Ave & Lunt Ave        | RP-005           | Valli Produce - Evanston Plaza | 599            | 42.008571    | \-87.6904828333333 | 42.039742 | \-87.699413 | casual        |
+| C90792D034FED968 | classic_bike  | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
+| 3397017529188E8A | classic_bike  | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
+| 58E68156DAE3E311 | electric_bike | ############### | ############### | Lakeview Ave & Fullerton Pkwy | TA1309000019     | Hampden Ct & Diversey Ave      | 202480.0       | 41.926068902 | \-87.638858199     | 41.93     | \-87.64     | member        |
+| 2F7194B6012A98D4 | electric_bike | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799553633 | \-87.594616652     | 41.809835 | \-87.599383 | member        |
+| DB1CF84154D6A049 | classic_bike  | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
+| 34EAB943F88C4C5D | electric_bike | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799587488 | \-87.594670296     | 41.809835 | \-87.599383 | member        |
+| BC8AB1AA51DA9115 | classic_bike  | ############### | ############### | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
+
 - Checked the number of rows imported:
     ```sql
     SELECT COUNT(*) FROM rides;
     ```
 
 ### 4. Data Cleaning
-- Identified and removed any records with inconsistencies, such as rides with an end time earlier than the start time:
+- Identified and removed any records with inconsistencies, such as odd bike type, member type or rides with an end time earlier than the start time:
     ```sql
+    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
     SELECT COUNT(*) FROM rides WHERE ended_at < started_at;
     ```
+    
+    
 
 ### 5. Data Analysis
 - Conducted various analyses, such as:
