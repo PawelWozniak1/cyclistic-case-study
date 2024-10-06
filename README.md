@@ -12,3 +12,8 @@ Welcome to the **Cyclistic Bike-Share Analysis** case study, where we analyze bi
 - **Data Analysis**: Performed various queries to extract insights on usage patterns.
 
 ## Steps Taken
+
+### 1. Environment Setup
+- Installed SQLite3 and set up system environment variables to make `sqlite3` command accessible in the terminal. Verified the installation with:
+  ```bash
+  sqlite3 --version```
