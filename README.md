@@ -91,26 +91,10 @@ Before analysis, it was essential to evaluate the integrity of the data:
 3. **Data Verification**:
    After importing the data, it was essential to verify its accuracy by running the following SQL queries:
    ```sql
-   -- View sample data
    SELECT * FROM rides LIMIT 10;
+   ```
 
-   -- Check the total number of records imported
-   SELECT COUNT(*) FROM rides;
-
-   -- Check for any missing values in critical columns
-   SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
-
-   -- Check the distribution of bike types and user types
-   SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
-   SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
-
-### 3. Verifying Data Import------------
-- Overview of the data
-    ```sql
-    SELECT * FROM rides LIMIT 10;
-    ```
-
-    Output:
+   Output:
 
 | ride_id          | rideable_type | started_at       | ended_at         | start_station_name            | start_station_id | end_station_name               | end_station_id | start_lat    | start_lng          | end_lat   | end_lng     | member_casual |
 | ---------------- | ------------- | ---------------- | ---------------- | ----------------------------- | ---------------- | ------------------------------ | -------------- | ------------ | ------------------ | --------- | ----------- | ------------- |
@@ -125,6 +109,21 @@ Before analysis, it was essential to evaluate the integrity of the data:
 | 34EAB943F88C4C5D | electric_bike | 25.01.2023 20:49 | 25.01.2023 21:02 | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799587488 | \-87.594670296     | 41.809835 | \-87.599383 | member        |
 | BC8AB1AA51DA9115 | classic_bike  | 06.01.2023 16:37 | 06.01.2023 16:49 | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
 
+   ```sql
+   -- View sample data
+   SELECT * FROM rides LIMIT 10;
+
+   -- Check the total number of records imported
+   SELECT COUNT(*) FROM rides;
+
+   -- Check for any missing values in critical columns
+   SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
+
+   -- Check the distribution of bike types and user types
+   SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
+   SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
+
+### 3. Verifying Data Import------------
 - Checked the number of rows imported:
     ```sql
     SELECT COUNT(*) FROM rides;
