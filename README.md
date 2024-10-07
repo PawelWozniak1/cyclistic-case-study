@@ -92,17 +92,17 @@ Before analysis, it was essential to evaluate the integrity of the data:
    After importing the data, it was essential to verify its accuracy by running the following SQL queries:
    ```sql
    -- View sample data
-SELECT * FROM rides LIMIT 10;
+   SELECT * FROM rides LIMIT 10;
 
--- Check the total number of records imported
-SELECT COUNT(*) FROM rides;
+   -- Check the total number of records imported
+   SELECT COUNT(*) FROM rides;
 
--- Check for any missing values in critical columns
-SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
+   -- Check for any missing values in critical columns
+   SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
 
--- Check the distribution of bike types and user types
-SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
-SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
+   -- Check the distribution of bike types and user types
+   SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
+   SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
 
 ### 3. Verifying Data Import------------
 - Overview of the data
