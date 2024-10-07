@@ -91,6 +91,7 @@ Before analysis, it was essential to evaluate the integrity of the data:
 3. **Data Verification**:
    After importing the data, it was essential to verify its accuracy by running the following SQL queries:
    ```sql
+   -- View sample data
    SELECT * FROM rides LIMIT 10;
    ```
 
@@ -148,3 +149,99 @@ The data cleaning process was critical to ensure accurate and reliable analysis.
    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
    ```
 By implementing these cleaning steps, the dataset was refined to be consistent, accurate, and ready for deeper analysis.
+
+## Analyze
+
+The **Analyze** phase involves exploring the cleaned data to derive insights and answer the key business questions. The focus is on identifying patterns in how casual riders and annual members use Cyclistic bikes differently.
+
+### 1. Descriptive Statistics
+
+To begin the analysis, descriptive statistics were calculated to summarize the key features of the data, such as ride duration, number of rides, and distribution of user types.
+
+```sql
+-- Calculate total number of rides by user type
+SELECT member_casual, COUNT(*) AS ride_count 
+FROM rides 
+GROUP BY member_casual;
+
+Output:
+| member_casual | ride_count |
+| ------------- | ---------- |
+| casual        | 2059037    |
+| member        | 3660568    |
+
+-- Calculate average ride duration (in minutes) by user type
+SELECT member_casual, AVG((JULIANDAY(ended_at) - JULIANDAY(started_at)) * 24 * 60) AS avg_ride_duration 
+FROM rides 
+GROUP BY member_casual;
+
+Output:
+| member_casual | avg_ride_duration |
+| ------------- | ----------------- |
+| casual        | 28.24825055744    |
+| member        | 12.5258002356036  |
+
+-- Count the number of rides by rideable type and user type
+SELECT member_casual, rideable_type, COUNT(*) AS ride_count 
+FROM rides 
+GROUP BY member_casual, rideable_type;
+
+Output:
+| member_casual | rideable_type | ride_count |
+| ------------- | ------------- | ---------- |
+| casual        | classic_bike  | 876858     |
+| casual        | docked_bike   | 78287      |
+| casual        | electric_bike | 1103892    |
+| member        | classic_bike  | 1819110    |
+| member        | electric_bike | 1841458    |
+```
+
+Key observations:
+
+- Casual riders generally take longer rides than annual members.
+- Annual members tend to use Cyclistic bikes more frequently than casual riders.
+- Electric bikes are popular among both casual riders and members, but the exact distribution differs by user type.
+
+### 2. Ride Patterns by Day of the Week
+
+Analyzing how ride usage varies by day of the week helps in understanding when users are most active. This can provide insights into user behavior, particularly for targeting marketing campaigns.
+
+```sql
+-- Extract the day of the week and count rides by user type
+-- Extract the day of the week and count rides by user type
+SELECT CASE STRFTIME('%w', started_at)
+         WHEN '0' THEN 'Sunday'
+         WHEN '1' THEN 'Monday'
+         WHEN '2' THEN 'Tuesday'
+         WHEN '3' THEN 'Wednesday'
+         WHEN '4' THEN 'Thursday'
+         WHEN '5' THEN 'Friday'
+         WHEN '6' THEN 'Saturday'
+       END AS day_of_week, member_casual, COUNT(*) AS ride_count
+FROM rides
+GROUP BY day_of_week, member_casual
+ORDER BY day_of_week, ride_count desc;
+
+Ride Counts by Day of the Week:
+| day_of_week | member_casual | ride_count |
+| ----------- | ------------- | ---------- |
+| Friday      | member        | 531582     |
+| Friday      | casual        | 311907     |
+| Monday      | member        | 494558     |
+| Monday      | casual        | 234818     |
+| Saturday    | member        | 472846     |
+| Saturday    | casual        | 410684     |
+| Sunday      | member        | 408829     |
+| Sunday      | casual        | 335668     |
+| Thursday    | member        | 589572     |
+| Thursday    | casual        | 270596     |
+| Tuesday     | member        | 576743     |
+| Tuesday     | casual        | 246211     |
+| Wednesday   | member        | 586438     |
+| Wednesday   | casual        | 249153     |
+```
+
+Key Insights:
+- Casual riders are most active on weekends, particularly on Saturday and    Sunday, with a significant dip during the weekdays.
+- Annual members maintain a steady usage throughout the week, with peaks on Wednesday and Thursday, indicating frequent use during weekdays, likely for commuting.
+- Marketing campaigns can be tailored to weekends for casual riders and weekdays for members, focusing on converting casual riders during their peak usage times.
