@@ -329,60 +329,60 @@ Analyzing the peak hours of bike usage can reveal when Cyclistic experiences the
 SELECT STRFTIME('%H', started_at) AS hour_of_day, member_casual, COUNT(*) AS ride_count
 FROM rides
 GROUP BY hour_of_day, member_casual
-ORDER BY hour_of_day;
+ORDER BY ride_count DESC
+LIMIT 15;
 
 Output:
 | hour_of_day | member_casual | ride_count |
 | ----------- | ------------- | ---------- |
-| 00          | casual        | 36890      |
-| 00          | member        | 35533      |
-| 01          | casual        | 23902      |
-| 01          | member        | 21167      |
-| 02          | casual        | 14453      |
-| 02          | member        | 12275      |
-| 03          | casual        | 7941       |
-| 03          | member        | 7936       |
-| 04          | casual        | 5969       |
-| 04          | member        | 8778       |
-| 05          | casual        | 11428      |
-| 05          | member        | 34142      |
-| 06          | casual        | 30150      |
-| 06          | member        | 105308     |
-| 07          | casual        | 52999      |
-| 07          | member        | 194602     |
-| 08          | casual        | 70696      |
-| 08          | member        | 244214     |
-| 09          | casual        | 70005      |
-| 09          | member        | 164910     |
-| 10          | casual        | 86602      |
-| 10          | member        | 148846     |
-| 11          | casual        | 110521     |
-| 11          | member        | 176374     |
-| 12          | casual        | 130770     |
-| 12          | member        | 199938     |
-| 13          | casual        | 136650     |
-| 13          | member        | 198732     |
-| 14          | casual        | 142726     |
-| 14          | member        | 201897     |
-| 15          | casual        | 159256     |
-| 15          | member        | 246733     |
-| 16          | casual        | 182494     |
-| 16          | member        | 331627     |
-| 17          | casual        | 199270     |
 | 17          | member        | 387954     |
-| 18          | casual        | 172190     |
+| 16          | member        | 331627     |
 | 18          | member        | 307783     |
-| 19          | casual        | 127263     |
+| 15          | member        | 246733     |
+| 08          | member        | 244214     |
 | 19          | member        | 217966     |
-| 20          | casual        | 91914      |
-| 20          | member        | 151654     |
-| 21          | casual        | 77301      |
-| 21          | member        | 117760     |
-| 22          | casual        | 68356      |
-| 22          | member        | 88005      |
-| 23          | casual        | 49291      |
-| 23          | member        | 56434      |
+| 14          | member        | 201897     |
+| 12          | member        | 199938     |
+| 17          | casual        | 199270     |
+| 13          | member        | 198732     |
+| 07          | member        | 194602     |
+| 16          | casual        | 182494     |
+| 11          | member        | 176374     |
+| 18          | casual        | 172190     |
+| 09          | member        | 164910     |
 ```
 Insights:
-- Annual members primarily use the service during typical commuting hours (7-9 AM and 5-7 PM).
-- Casual riders tend to use the service more frequently in the afternoon and early evening, particularly on weekends.
+- Annual members primarily use the service during typical commuting hours (7-9 AM and 5-7 PM), which shows a clear pattern of consistent daily usage, likely linked to work schedules.
+- Casual riders tend to ride more in the afternoon and early evening, with their usage peaking around 4-6 PM. This behavior is more frequent on weekends, possibly indicating leisure activities rather than daily commutes.
+- The data reveals a clear weekday commuting pattern for members, while casual riders tend to use the bikes more flexibly, with afternoon peaks aligning with non-work-related trips.
+
+## Share
+
+### 1. Summary of Key Insights
+
+- **Casual riders** take longer rides but ride less frequently than **annual members**, who ride more often for shorter durations.
+- **Annual members** consistently use the service on weekdays, particularly during morning (7-9 AM) and evening (5-7 PM) commuting hours.
+- **Casual riders** are most active on weekends, with peak usage in the afternoon and early evening, suggesting leisure activity.
+- **Electric bikes** are used by both casual riders and members, but casual riders tend to take longer trips with them.
+- Popular start and end stations for **annual members** are near business districts and residential areas, while **casual riders** prefer tourist spots and parks.
+- There is a clear distinction in **peak riding hours**: annual members prefer commuting times, while casual riders are more active during leisure hours in the afternoon and evening.
+
+### 2. Recommendations
+
+- **Targeted Marketing Campaigns**: Tailor marketing efforts to attract casual riders during their peak times (weekends and afternoons). Weekend passes or promotions for scenic routes and tourist destinations could be effective.
+- **Convert Casual Riders to Annual Members**: Encourage casual riders to switch to an annual membership by highlighting the cost savings and convenience, especially for frequent electric bike users.
+- **Optimize Bike Availability During Peak Hours**: Ensure that key stations in business districts are stocked with enough bikes, especially electric ones, during peak commuting hours (7-9 AM and 5-7 PM).
+- **Station Expansion**: Expand bike stations near popular tourist and leisure areas to meet the high demand from casual riders during weekends.
+- **Commuter-Friendly Features**: Implement commuter-friendly features like priority docking or notifications about station availability during peak times for annual members.
+
+### 3. Next Steps: Visualization
+
+To better communicate the insights from this analysis, a series of visualizations will be created, including:
+
+- **Ride Duration Distribution**: To compare the distribution of ride durations between casual riders and members.
+- **Ride Patterns by Day of the Week**: A breakdown of rides per day, segmented by user type.
+- **Peak Riding Hours**: A graph displaying peak riding hours for both casual riders and annual members.
+- **Start and End Stations**: A map visualization of the most popular start and end stations by user type.
+- **Electric Bike Usage**: A chart comparing electric bike usage between casual riders and members.
+
+These visualizations will be included in the final report, which will be shared as a PDF along with this analysis.
