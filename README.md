@@ -6,45 +6,87 @@ The Cyclistic Bike-Share Analysis project focuses on evaluating bike usage patte
 
 ## Steps of the Analysis
 
-### 1. Setting Up the Environment
-- Created a database file `cyclistic_data.db` to store imported data.
+## Ask
 
-### 2. Importing Data
-- Used the following command to import the data from CSV files into the SQLite database:
-    ```python
-    import sqlite3
-    import pandas as pd
-    import csv
-    import os
+In this phase, the goal is to understand the business problem and how data analysis can provide actionable insights.
 
-    # Path to the directory containing CSV files
-    csv_dir = 'R:/cyclistic-case-study/'
+### Business Task
+Cyclistic, a fictional bike-share company, is interested in maximizing the number of annual memberships. Their historical data shows that casual riders (those who pay for a single ride or day pass) might be a potential target for converting into annual members. The company wants to know how casual riders and annual members use Cyclistic bikes differently to inform a marketing strategy aimed at converting casual riders into paying members.
 
-    # Create a new SQLite database
-    conn = sqlite3.connect('R:/cyclistic-case-study/cyclistic_data.db')
+### Key Stakeholders
+- **Cyclistic Executives**: Focus on how the insights from data analysis can help improve membership numbers.
+- **Marketing Team**: Will use the analysis to develop targeted campaigns aimed at casual riders.
+- **Data Analytics Team**: Responsible for providing the insights through analysis of the historical trip data.
 
-    # Function to import a CSV file
-    def import_csv(file_path):
-        with open(file_path, 'r') as f:
-            reader = csv.reader(f)
-            next(reader)  # Skip the header row
-            for row in reader:
-                cur.execute('''
-                    INSERT INTO rides (
-                        ride_id, rideable_type, started_at, ended_at,
-                        start_station_name, start_station_id, end_station_name,
-                        end_station_id, start_lat, start_lng, end_lat, end_lng,
-                        member_casual
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                ''', row)
+### Key Questions
+1. How do annual members and casual riders use Cyclistic bikes differently?
+2. Why would casual riders buy annual memberships?
+3. How can Cyclistic use digital media to influence casual riders to become members?
 
-    # Loop through each CSV file in the directory
-    for file in os.listdir(csv_dir):
-        if file.endswith('.csv'):
-            df = pd.read_csv(os.path.join(csv_dir, file))
-            df.to_sql(name='rides', con=conn, if_exists='append', index=False)
+By answering these questions, the analysis will help guide Cyclistic in improving their marketing strategy to boost membership.
 
-    conn.close()
+## Prepare
+
+The **Prepare** phase involves gathering the relevant data, ensuring its reliability, and understanding any potential limitations.
+
+### Data Source
+
+The data used for this analysis comes from Cyclistic's historical bike-share data. The dataset includes details such as:
+- Ride duration
+- Start and end stations
+- Type of bike used (classic, docked, or electric)
+- User type (casual or annual member)
+
+The data is stored in CSV files and was imported into an SQLite database for analysis.
+
+### Data Integrity
+
+Before analysis, it was essential to evaluate the integrity of the data:
+- **Consistency**: Checked if the data was consistent, especially in terms of time formats, bike types, and user categories.
+- **Completeness**: Verified that there were no missing or null values in critical columns, such as `ride_id`, `started_at`, `ended_at`, `start_station_name`, and `end_station_name`.
+- **Accuracy**: Removed records with inconsistencies, such as rides that had an end time earlier than the start time.
+
+### Data Preparation
+
+1. **Database Creation**:
+   A new SQLite database (`cyclistic_data.db`) was created to store the imported data for analysis. 
+
+2. **Data Import**:
+   The data from CSV files was imported into the SQLite database using the following Python code:
+   ```python
+   import sqlite3
+   import pandas as pd
+   import csv
+   import os
+
+   # Path to the directory containing CSV files
+   csv_dir = 'R:/cyclistic-case-study/'
+
+   # Create a new SQLite database
+   conn = sqlite3.connect('R:/cyclistic-case-study/cyclistic_data.db')
+
+   # Function to import a CSV file
+   def import_csv(file_path):
+       with open(file_path, 'r') as f:
+           reader = csv.reader(f)
+           next(reader)  # Skip the header row
+           for row in reader:
+               cur.execute('''
+                   INSERT INTO rides (
+                       ride_id, rideable_type, started_at, ended_at,
+                       start_station_name, start_station_id, end_station_name,
+                       end_station_id, start_lat, start_lng, end_lat, end_lng,
+                       member_casual
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+               ''', row)
+
+   # Loop through each CSV file in the directory
+   for file in os.listdir(csv_dir):
+       if file.endswith('.csv'):
+           df = pd.read_csv(os.path.join(csv_dir, file))
+           df.to_sql(name='rides', con=conn, if_exists='append', index=False)
+
+   conn.close()
 
 ### 3. Verifying Data Import
 - Overview of the data
