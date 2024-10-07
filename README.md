@@ -196,7 +196,7 @@ Output:
 | member        | electric_bike | 1841458    |
 ```
 
-Key observations:
+Insights:
 
 - Casual riders take longer rides on average than members.
 - Members use Cyclistic bikes more frequently, likely for commuting.
@@ -221,7 +221,7 @@ FROM rides
 GROUP BY day_of_week, member_casual
 ORDER BY day_of_week, ride_count desc;
 
-Ride Counts by Day of the Week:
+Output:
 | day_of_week | member_casual | ride_count |
 | ----------- | ------------- | ---------- |
 | Friday      | member        | 531582     |
@@ -240,7 +240,7 @@ Ride Counts by Day of the Week:
 | Wednesday   | casual        | 249153     |
 ```
 
-Key Insights:
+Insights:
 - Casual riders are most active on weekends, particularly on Saturday and    Sunday, with a significant dip during the weekdays.
 - Annual members maintain a steady usage throughout the week, with peaks on Wednesday and Thursday, indicating frequent use during weekdays, likely for commuting.
 - Marketing campaigns can be tailored to weekends for casual riders and weekdays for members, focusing on converting casual riders during their peak usage times.
@@ -269,7 +269,6 @@ Output:
 | member        | 8.51666674017906     |
 ```
 Insights:
-
 - Casual riders tend to have longer ride durations compared to members.
 - Members’ ride durations are more consistent, possibly reflecting regular commuting routes.
 
@@ -319,7 +318,6 @@ Output:
 | member        | Wells St & Concord Ln              | 22248     |
 ```
 Insights:
-
 - The blank entries in both **start** and **end** stations are primarily related to **electric bikes**, which likely means that users of electric bikes are able to leave them outside designated docking stations. This suggests that Cyclistic's electric bike system offers more flexibility in where bikes can be parked.
 - **Casual riders** tend to start and end their trips near tourist attractions and recreational areas.
 - **Members**, on the other hand, favor starting and ending trips at stations near business districts and residential areas, which likely indicates regular commuting behavior.
@@ -385,7 +383,6 @@ Output:
 | 23          | casual        | 49291      |
 | 23          | member        | 56434      |
 ```
-Key findings:
-
+Insights:
 - Annual members primarily use the service during typical commuting hours (7-9 AM and 5-7 PM).
 - Casual riders tend to use the service more frequently in the afternoon and early evening, particularly on weekends.
