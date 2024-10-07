@@ -110,9 +110,6 @@ Before analysis, it was essential to evaluate the integrity of the data:
 | BC8AB1AA51DA9115 | classic_bike  | 06.01.2023 16:37 | 06.01.2023 16:49 | Kimbark Ave & 53rd St         | TA1309000037     | Greenwood Ave & 47th St        | TA1308000002   | 41.799568    | \-87.594747        | 41.809835 | \-87.599383 | member        |
 
    ```sql
-   -- View sample data
-   SELECT * FROM rides LIMIT 10;
-
    -- Check the total number of records imported
    SELECT COUNT(*) FROM rides;
 
@@ -122,43 +119,32 @@ Before analysis, it was essential to evaluate the integrity of the data:
    -- Check the distribution of bike types and user types
    SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
-
-### 3. Verifying Data Import------------
-- Checked the number of rows imported:
-    ```sql
-    SELECT COUNT(*) FROM rides;
-    ```
-
-- Check for any null or missing values in key columns:
-    ```sql
-    SELECT COUNT(*) FROM rides WHERE ride_id IS NULL OR start_station_name IS NULL;
-    ```
-
-- Check the distribution of rideable and members types:
-    ```sql
-    SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
-    SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
-    ```
+   ```
 
 ### 4. Data Cleaning
-- Identified and removed any records with inconsistencies, such as odd bike type, member type or rides with an end time earlier than the start time:
-    ```sql
-    DELETE FROM rides WHERE rowid NOT IN (SELECT MIN(rowid) FROM rides GROUP BY ride_id);
-    DELETE FROM rides WHERE start_station_name IS NULL OR end_station_name IS NULL;
-    DELETE FROM rides WHERE ended_at < started_at;
-    ```
-    
-### 5. Data Analysis
-- Conducted various analyses, such as:
-    - User type distribution:
-      ```sql
-      SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
-      ```
-    - Average ride duration by user type:
-      ```sql
-      SELECT member_casual, AVG(strftime('%s', ended_at) - strftime('%s', started_at)) AS avg_duration FROM rides GROUP BY member_casual;
-      ```
 
-### 6. Documentation
-- Recorded all steps and queries in the README for future reference and reproducibility.
+The data cleaning process was critical to ensure accurate and reliable analysis. The following steps were taken:
 
+1. **Duplicate Records**: 
+   Removed any duplicate records based on the `ride_id` to ensure each ride was unique.
+   ```sql
+   DELETE FROM rides WHERE rowid NOT IN (SELECT MIN(rowid) FROM rides GROUP BY ride_id);
+   ```
+2. **Missing Data**:
+   Removed rows where important fields like start_station_name or end_station_name were missing, as these records wouldn't contribute to meaningful insights.
+   ```sql
+   DELETE FROM rides WHERE start_station_name IS NULL OR end_station_name IS NULL;
+   ```
+3. **Invalid Time Entries**:
+   Identified and removed any rides where the ended_at timestamp was earlier than the started_at, as these entries were logically impossible.
+   ```sql
+   DELETE FROM rides WHERE ended_at < started_at;
+   ```
+4. **Sanity Checks**:
+   - Verified that all important columns (such as ride_id, start_station_name, and member_casual) were properly populated.
+   - Checked for the correct distribution of bike types and user types to ensure data consistency.
+   ```sql
+   SELECT rideable_type, COUNT(*) FROM rides GROUP BY rideable_type;
+   SELECT member_casual, COUNT(*) FROM rides GROUP BY member_casual;
+   ```
+By implementing these cleaning steps, the dataset was refined to be consistent, accurate, and ready for deeper analysis.
