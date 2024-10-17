@@ -1,0 +1,142 @@
+---
+title: "Cyclistic Case Study - Visualization & code"
+author: "Pawel Wozniak"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+  word_document: default
+---
+
+## Data Preparation
+
+```r
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(scales)  # For formatting numbers with spaces
+library(leaflet)
+
+# Convert started_at and ended_at to POSIXct
+rides$started_at <- as.POSIXct(rides$started_at, format = "%Y-%m-%d %H:%M:%S")
+rides$ended_at <- as.POSIXct(rides$ended_at, format = "%Y-%m-%d %H:%M:%S")
+
+# Calculate ride duration in minutes
+rides$ride_duration <- as.numeric(difftime(rides$ended_at, rides$started_at, units = "mins"))
+
+# Check for any negative or extreme values
+summary(rides$ride_duration)
+
+# Filter out negative or very long durations (e.g., more than 24 hours)
+rides_clean <- rides %>%
+  filter(ride_duration > 0 & ride_duration < 1440)  # 1440 minutes = 24 hours
+```
+
+## Distribution of Ride Duration by User Type
+This plot shows the distribution of ride durations for both casual riders and members, filtered for durations shorter than 24 hours.
+
+```r
+# Wykres gęstości (Density Plot)
+ggplot(rides_clean, aes(x = ride_duration, fill = member_casual)) +
+  geom_density(alpha = 0.5) +
+  labs(title = "Distribution of Ride Duration by User Type",
+       x = "Ride Duration (minutes)",
+       y = "Density") +
+  scale_fill_manual(values = c("#ff4d4d", "#3399ff"), name = "User Type") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  xlim(0, 100)
+```
+![](image/Ride Duration Distribution.png)
+
+## Ride Patterns by Day of the Week
+This plot shows the number of rides per day of the week, segmented by user type. The days of the week are displayed in English and ordered from Monday to Sunday.
+
+```r
+# Create a new column for the day of the week in English
+Sys.setlocale("LC_TIME", "C")
+rides_clean$day_of_week <- weekdays(as.Date(rides_clean$started_at), abbreviate = TRUE)
+
+# Reordering days of the week in the correct order (Monday to Sunday)
+rides_clean$day_of_week <- factor(rides_clean$day_of_week, levels = c("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"))
+
+# Plot ride count by day of the week and user type
+ggplot(rides_clean, aes(x = day_of_week, fill = member_casual)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Ride Patterns by Day of the Week",
+       x = "Day of the Week",
+       y = "Number of Rides",
+       fill = "User Type") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("#ff4d4d", "#3399ff")) +
+  scale_y_continuous(labels = label_number(big.mark = " "))
+```
+
+![](image/Ride Patterns by Day of the Week.png)
+
+## Peak Riding Hours by User Type
+This plot highlights the peak riding hours for casual riders and annual members.
+
+```r
+# Extract the hour from the started_at column
+rides_clean$hour_of_day <- format(as.POSIXct(rides_clean$started_at), "%H")
+
+# Peak Riding Hours by User Type
+ggplot(rides_clean, aes(x = hour_of_day, fill = member_casual)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Peak Riding Hours by User Type",
+       x = "Hour of the Day",
+       y = "Number of Rides",
+       fill = "User Type") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_fill_manual(values = c("#ff4d4d", "#3399ff")) +
+  scale_y_continuous(labels = label_number(big.mark = " "))
+```
+
+![](image/Peak Riding Hours by User Type.png)
+
+## Electric Bike Usage by User Type
+This plot compares the usage of electric bikes by casual riders and members.
+
+```r
+# Electric Bike Usage by User Type
+electric_bikes <- rides_clean %>% filter(rideable_type == "electric_bike")
+
+ggplot(electric_bikes, aes(x = member_casual, fill = member_casual)) +
+  geom_bar() +
+  labs(title = "Electric Bike Usage by User Type",
+       x = "User Type",
+       y = "Number of Rides") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#ff4d4d", "#3399ff")) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = label_number(big.mark = " "))
+```
+
+![](image/Electric Bike Usage by User Type.png)
+
+## Map of the Most Popular Start Stations
+This interactive map shows the top 10 most popular start stations by ride count.
+
+```r
+# Map of the Most Popular Start Stations
+top_start_stations <- rides_clean %>%
+  group_by(start_station_name, start_lat, start_lng) %>%
+  summarise(ride_count = n()) %>%
+  arrange(desc(ride_count)) %>%
+  head(10)
+
+leaflet(data = top_start_stations) %>%
+  addTiles() %>%
+  addCircleMarkers(lng = ~start_lng, lat = ~start_lat,
+                   radius = ~ride_count / 1000,
+                   popup = ~start_station_name)
+```
+
+![Most Popular Start Stations](image/Map.png)
+
+<br>
+This document provides visual insights from the Cyclistic bike-share data, focusing on ride duration, usage patterns by time, and user preferences for electric bikes and start stations.
+
